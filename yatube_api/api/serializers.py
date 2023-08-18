@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from django.core.files.base import ContentFile
 import base64
 
@@ -20,7 +21,8 @@ class PostSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field='username',
                                           read_only=True)
     image = Base64ImageField(required=False, allow_null=True)
-    group = serializers.IntegerField(required=False)
+    group = serializers.PrimaryKeyRelatedField(required=False,
+                                               queryset=Group.objects.all())
 
     class Meta:
         fields = ('id', 'text', 'pub_date', 'author', 'image', 'group')
@@ -59,6 +61,13 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('user', 'following')
         model = Follow
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Follow.objects.all(),
+                fields=('user', 'following'),
+                message='Вы уже подписаны на данного пользователя.'
+            )
+        ]
 
     def validate(self, data):
         if self.context.get('request').user == data.get('following'):
