@@ -41,23 +41,23 @@ python3 manage.py runserver
 
 ## 1. Получение токена.
 
-Для получения токена необходимо отправить данные зарегистрированного пользователя
+Для получения токена необходимо отправить данные зарегистрированного пользователя на
+URL-адрес http://127.0.0.1:8000/auth/jwt/create/
 ```
 {
 "username": "string",
 "password": "string"
 }
 ```
-на URL адрес
-```
-http://127.0.0.1:8000/auth/jwt/create/
-```
+
 Ответ придет в виде токена:
 ```
 "refresh":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY5MjM3NzgxOCwiaWF0IjoxNjkyMjkxNDE4LCJqdGkiOiIxM2RkOTg1ZTc1MTk0MGI5YmNmMDI2YmFkMmJhY2MxMSIsInVzZXJfaWQiOjF9._GbFYOfjJBxCanCbEB2Y4KLEuYNRR6kBdiObS8lKYO4",
 "access":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkyNTUwNjE4LCJpYXQiOjE2OTIyOTE0MTgsImp0aSI6ImYzNjBhZDk4OWI4YjRjMGM4NDAzYjlhMmQ1NWM1MWYyIiwidXNlcl9pZCI6MX0.R3faMt6BV3KRTm49lessQw65uXck9a4Z4Dz8kWT0zrM"
 ```
-где, access токен используется для аутентификации в API при отправке запросов посредством добавления его в параметр Authorization Bearer (далее сам токен), а refresh токен служит для обновления токена access по истечении его срока действия, который по умолчанию действует 3 суток.
+где access токен используется для аутентификации в API при отправке запросов посредством добавления его в параметр Authorization. В этот параметр вностися слово Bearer, а далее через пробел сам токен.  
+
+Refresh токен служит для обновления токена access по истечении срока действия Access токена, который по умолчанию действует 3 суток. Для этого необходимо отрпавить refresh токен на URL-адрес http://127.0.0.1:8000/auth/jwt/create/, указав его параметре Authorization вместо access токена.
 
 ## 2. Примеры запросов.
 
